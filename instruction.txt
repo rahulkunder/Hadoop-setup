@@ -1,0 +1,92 @@
+Download the hadoop_1.2.1-1_x86_64.rpm & jdk-8u171 direct!
+ 
+#sudo yum install wget
+ 
+#wget https://archive.apache.org/dist/hadoop/core/hadoop-1.2.1/hadoop-1.2.1-1.x86_64.rpm 
+ 
+#wget https://mirrors.huaweicloud.com/java/jdk/8u171-b11/jdk-8u171-linux-x64.rpm
+
+Installing the software
+
+#rpm -i jdk-8u171-linux-x64.rpm 
+
+#rpm -i hadoop-1.2.1-1.x86_64.rpm --force
+
+ 
+--------->Setup of Name Node<---------
+-> cd /etc/hadoop
+-> vim hdfs-site.xml
+<configuration>
+<property>
+<name>dfs.name.dir</name>
+<value>/nn</value>
+</property>
+</configuration>
+
+-> vim core-site.xml
+<configuration>
+<property>
+<name>fs.default.name</name>
+<value>hdfs://0.0.0.0:9001</value>
+</property>
+</configuration>
+-> hadoop namenode -format
+-> hadoop-daemon.sh start namenode
+-> jps
+
+
+----------->Setup of Data Node<----------
+-> cd /etc/hadoop
+-> vim hdfs-site.xml
+<configuration>
+<property>
+<name>dfs.data.dir</name>
+<value>/dn</value
+</property>
+</configuration>
+
+-> vim core-site.xml
+<configuration>
+<property>
+<name>fs.default.name</name>
+<value>hdfs://master_node_ip:9001</value>
+</property>
+</configuration>
+-> hadoop-daemon.sh start datanode
+-> jps
+
+--------->Setup of Client Node<----------
+-> cd /etc/hadoop
+-> vim core-site.xml
+<configuration>
+<property>
+<name>fs.default.name</name>
+<value>hdfs://master_node_ip:9001</value>
+</property>
+</configuration>
+-> hadoop dfsadmin -report
+-> hadoop fs -ls / 
+
+---------->Some Hadoop Command<----------
+#hadoop-daemon.sh start namenode (To Start the NameNode)
+#hadoop-daemon.sh stop namenode (To Stop the NameNode)
+#hadoop-daemon.sh start datanode (To Start the DataNode)
+#hadoop-daemon.sh stop datanode (To Stop the DataNode)
+
+#hadoop namenode -format (To format the folder of Namenode)
+
+#jps (To see the hadoop process running or not)
+
+#hadoop dfsadmin -report (To see the Hadoop Connection Report)
+
+#hadoop fs -ls / (It will show the list of shared drive)
+#hadoop fs -Ddfs.block.size=512 -put something.txt / (Uploading file with require block size)
+#hadoop fs -Ddfs.block.replication=1 -pur something.txt / (Uploading file with 1 Replication default is 3)
+
+
+---------->Web Hadoop<----------
+To view file of Hadoop on web the port will use 50075
+#master_ip:50075
+
+----------->TCP DUMP<----------
+#tcpdump -i eth0 port 50010
